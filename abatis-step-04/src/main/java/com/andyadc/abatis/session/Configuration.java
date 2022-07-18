@@ -1,8 +1,10 @@
 package com.andyadc.abatis.session;
 
+import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.andyadc.abatis.binding.MapperRegistry;
 import com.andyadc.abatis.mapping.Environment;
 import com.andyadc.abatis.mapping.MappedStatement;
+import com.andyadc.abatis.transaction.jdbc.JdbcTransactionFactory;
 import com.andyadc.abatis.type.TypeAliasRegistry;
 
 import java.util.HashMap;
@@ -22,4 +24,44 @@ public class Configuration {
     // 类型别名注册机
     protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
 
+    public Configuration() {
+        typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
+        typeAliasRegistry.registerAlias("DRUID", DruidDataSourceFactory.class);
+    }
+
+    public void addMappers(String packageName) {
+        mapperRegistry.addMappers(packageName);
+    }
+
+    public <T> void addMapper(Class<T> type) {
+        mapperRegistry.addMapper(type);
+    }
+
+    public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
+        return mapperRegistry.getMapper(type, sqlSession);
+    }
+
+    public boolean hasMapper(Class<?> type) {
+        return mapperRegistry.hasMapper(type);
+    }
+
+    public void addMappedStatement(MappedStatement ms) {
+        mappedStatements.put(ms.getId(), ms);
+    }
+
+    public MappedStatement getMappedStatement(String id) {
+        return mappedStatements.get(id);
+    }
+
+    public TypeAliasRegistry getTypeAliasRegistry() {
+        return typeAliasRegistry;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 }

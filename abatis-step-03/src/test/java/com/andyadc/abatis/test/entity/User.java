@@ -1,6 +1,7 @@
 package com.andyadc.abatis.test.entity;
 
 import java.time.LocalDateTime;
+import java.util.StringJoiner;
 
 public class User {
 
@@ -48,5 +49,16 @@ public class User {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("userId=" + userId)
+                .add("name=" + name)
+                .add("age=" + age)
+                .add("createTime=" + createTime)
+                .toString();
     }
 }

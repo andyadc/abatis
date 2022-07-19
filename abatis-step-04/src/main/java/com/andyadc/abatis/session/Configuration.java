@@ -1,7 +1,7 @@
 package com.andyadc.abatis.session;
 
-import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.andyadc.abatis.binding.MapperRegistry;
+import com.andyadc.abatis.datasource.druid.DruidDataSourceFactory;
 import com.andyadc.abatis.mapping.Environment;
 import com.andyadc.abatis.mapping.MappedStatement;
 import com.andyadc.abatis.transaction.jdbc.JdbcTransactionFactory;

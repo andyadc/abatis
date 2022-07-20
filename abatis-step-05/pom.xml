@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.andyadc</groupId>
-    <artifactId>abatis-step-04</artifactId>
+    <artifactId>abatis-step-05</artifactId>
     <version>1.0.0</version>
 
-    <name>abatis-step-04</name>
+    <name>abatis-step-05</name>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

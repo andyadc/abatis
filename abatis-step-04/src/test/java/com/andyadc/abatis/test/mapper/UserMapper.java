@@ -4,5 +4,5 @@ import com.andyadc.abatis.test.entity.User;
 
 public interface UserMapper {
 
-    User selectByUserId(Long userId);
+    User selectById(Long id);
 }

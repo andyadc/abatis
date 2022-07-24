@@ -2,6 +2,8 @@ package com.andyadc.abatis.session;
 
 import com.andyadc.abatis.binding.MapperRegistry;
 import com.andyadc.abatis.datasource.druid.DruidDataSourceFactory;
+import com.andyadc.abatis.datasource.pooled.PooledDataSourceFactory;
+import com.andyadc.abatis.datasource.unpooled.UnpooledDataSourceFactory;
 import com.andyadc.abatis.mapping.Environment;
 import com.andyadc.abatis.mapping.MappedStatement;
 import com.andyadc.abatis.transaction.jdbc.JdbcTransactionFactory;
@@ -23,7 +25,10 @@ public class Configuration {
 
     public Configuration() {
         typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
+
         typeAliasRegistry.registerAlias("DRUID", DruidDataSourceFactory.class);
+        typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
+        typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
     }
 
     public void addMappers(String packageName) {

@@ -8,11 +8,12 @@ import com.andyadc.abatis.session.SqlSession;
 import com.andyadc.abatis.util.Utils;
 
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,14 +70,19 @@ public class DefaultSqlSession implements SqlSession {
                     if (value == null) {
                         continue;
                     }
+                    if (value instanceof BigInteger) {
+                        value = ((BigInteger) value).longValue();
+                    }
 
                     String columnName = metaData.getColumnName(i);
 
                     String property = Utils.capitalize(Utils.underline2CamelCase(columnName));
                     String setMethod = "set" + property;
                     Method method;
-                    if (value instanceof Timestamp) {
+                    if (value instanceof java.sql.Timestamp) {
                         method = clazz.getMethod(setMethod, Date.class);
+                    } else if (value instanceof java.sql.Date) {
+                        method = clazz.getMethod(setMethod, LocalDate.class);
                     } else {
                         method = clazz.getMethod(setMethod, value.getClass());
                     }

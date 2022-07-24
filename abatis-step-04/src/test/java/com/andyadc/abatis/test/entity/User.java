@@ -1,15 +1,18 @@
 package com.andyadc.abatis.test.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.StringJoiner;
 
 public class User {
 
     private Long id;
-    private Long userId;
     private String name;
     private Integer age;
+    private Integer status;
+    private Integer version;
+    private LocalDate birthday;
     private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 
     public Long getId() {
         return id;
@@ -17,14 +20,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getName() {
@@ -43,6 +38,30 @@ public class User {
         this.age = age;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -51,14 +70,25 @@ public class User {
         this.createTime = createTime;
     }
 
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Override
     public String toString() {
-        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("userId=" + userId)
-                .add("name=" + name)
-                .add("age=" + age)
-                .add("createTime=" + createTime)
-                .toString();
+        return "User{" +
+                "id=" + id +
+                ", name=" + name +
+                ", age=" + age +
+                ", status=" + status +
+                ", version=" + version +
+                ", birthday=" + birthday +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

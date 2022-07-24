@@ -27,7 +27,7 @@ public class Tests {
         // 2. 获取映射器对象
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 
-        User user = userMapper.selectByUserId(1L);
+        User user = userMapper.selectById(1000L);
 
         System.out.println(Utils.toJson(user));
     }
@@ -43,7 +43,7 @@ public class Tests {
         SqlSession sqlSession = new DefaultSqlSession(configuration);
 
         // 执行查询：默认是一个集合参数
-        Object[] req = {1L};
+        Object[] req = {1000L};
         Object res = sqlSession.selectOne("com.andyadc.abatis.test.mapper.UserMapper.selectByUserId", req);
         System.out.println(Utils.toJson(res));
     }

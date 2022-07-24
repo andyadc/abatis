@@ -1,12 +1,10 @@
 package com.andyadc.abatis.test;
 
-import com.andyadc.abatis.builder.xml.XMLConfigBuilder;
+import com.andyadc.abatis.datasource.pooled.PooledDataSource;
 import com.andyadc.abatis.io.Resources;
-import com.andyadc.abatis.session.Configuration;
 import com.andyadc.abatis.session.SqlSession;
 import com.andyadc.abatis.session.SqlSessionFactory;
 import com.andyadc.abatis.session.SqlSessionFactoryBuilder;
-import com.andyadc.abatis.session.defaults.DefaultSqlSession;
 import com.andyadc.abatis.test.entity.User;
 import com.andyadc.abatis.test.mapper.UserMapper;
 import com.andyadc.abatis.util.Utils;
@@ -14,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Tests {
 
@@ -27,24 +27,26 @@ public class Tests {
         // 2. 获取映射器对象
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 
-        User user = userMapper.selectByUserId(1L);
-
-        System.out.println(Utils.toJson(user));
+        // 3. 测试验证
+        for (int i = 0; i < 50; i++) {
+            User user = userMapper.selectById(1000L);
+            System.out.println(Utils.toJson(user));
+        }
     }
 
     @Test
-    public void test_selectOne() throws IOException {
-        // 解析 XML
-        Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
-        XMLConfigBuilder xmlConfigBuilder = new XMLConfigBuilder(reader);
-        Configuration configuration = xmlConfigBuilder.parse();
-
-        // 获取 DefaultSqlSession
-        SqlSession sqlSession = new DefaultSqlSession(configuration);
-
-        // 执行查询：默认是一个集合参数
-        Object[] req = {1L};
-        Object res = sqlSession.selectOne("com.andyadc.abatis.test.mapper.UserMapper.selectByUserId", req);
-        System.out.println(Utils.toJson(res));
+    public void test_pooled() throws SQLException, InterruptedException {
+        PooledDataSource pooledDataSource = new PooledDataSource();
+        pooledDataSource.setDriver("com.mysql.cj.jdbc.Driver");
+        pooledDataSource.setUrl("jdbc:mysql://127.0.0.1:3306/abatis?useUnicode=true");
+        pooledDataSource.setUsername("root");
+        pooledDataSource.setPassword("andyadc");
+        // 持续获得链接
+        while (true) {
+            Connection connection = pooledDataSource.getConnection();
+            System.out.println(connection);
+            Thread.sleep(1000);
+            connection.close();
+        }
     }
 }

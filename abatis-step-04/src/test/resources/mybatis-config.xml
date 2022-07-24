@@ -7,7 +7,7 @@
             <transactionManager type="JDBC"/>
             <dataSource type="DRUID">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://127.0.0.1:3307/idea?useUnicode=true"/>
+                <property name="url" value="jdbc:mysql://127.0.0.1:3306/abatis?useUnicode=true"/>
                 <property name="username" value="root"/>
                 <property name="password" value="andyadc"/>
             </dataSource>

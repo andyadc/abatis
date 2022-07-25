@@ -276,12 +276,12 @@ public class PooledDataSource implements DataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return null;
+        return popConnection(dataSource.getUsername(), dataSource.getPassword()).getProxyConnection();
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return null;
+        return popConnection(username, password).getProxyConnection();
     }
 
     protected void finalize() throws Throwable {
@@ -343,7 +343,6 @@ public class PooledDataSource implements DataSource {
         dataSource.setPassword(password);
         forceCloseAll();
     }
-
 
     public void setDefaultAutoCommit(boolean defaultAutoCommit) {
         dataSource.setAutoCommit(defaultAutoCommit);

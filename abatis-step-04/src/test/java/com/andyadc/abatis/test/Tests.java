@@ -18,7 +18,7 @@ import java.io.Reader;
 public class Tests {
 
     @Test
-    public void test_SqlSessionFactory() throws IOException {
+    public void test_04_SqlSessionFactory() throws IOException {
         // 1. 从 SqlSessionFactory中获取 SqlSession
         Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -33,7 +33,7 @@ public class Tests {
     }
 
     @Test
-    public void test_selectOne() throws IOException {
+    public void test_04_selectOne() throws IOException {
         // 解析 XML
         Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
         XMLConfigBuilder xmlConfigBuilder = new XMLConfigBuilder(reader);
@@ -44,7 +44,7 @@ public class Tests {
 
         // 执行查询：默认是一个集合参数
         Object[] req = {1000L};
-        Object res = sqlSession.selectOne("com.andyadc.abatis.test.mapper.UserMapper.selectByUserId", req);
+        Object res = sqlSession.selectOne("com.andyadc.abatis.test.mapper.UserMapper.selectById", req);
         System.out.println(Utils.toJson(res));
     }
 }

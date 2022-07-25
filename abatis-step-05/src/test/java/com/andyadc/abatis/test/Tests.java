@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class Tests {
 
     @Test
-    public void test_SqlSessionFactory() throws IOException {
+    public void test_05_SqlSessionFactory() throws IOException {
         // 1. 从 SqlSessionFactory中获取 SqlSession
         Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -35,7 +35,7 @@ public class Tests {
     }
 
     @Test
-    public void test_pooled() throws SQLException, InterruptedException {
+    public void test_05_pooled() throws SQLException, InterruptedException {
         PooledDataSource pooledDataSource = new PooledDataSource();
         pooledDataSource.setDriver("com.mysql.cj.jdbc.Driver");
         pooledDataSource.setUrl("jdbc:mysql://127.0.0.1:3306/abatis?useUnicode=true");

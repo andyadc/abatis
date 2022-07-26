@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper namespace="com.andyadc.abatis.test.mapper.UserMapper">
+
+    <select id="selectById" parameterType="java.lang.Long" resultType="com.andyadc.abatis.test.entity.User">
+        SELECT id, name, age, status,
+        create_time, update_time
+        FROM t_user
+        WHERE id = #{id}
+    </select>
+
+</mapper>

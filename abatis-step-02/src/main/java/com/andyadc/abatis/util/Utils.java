@@ -1,10 +1,10 @@
 package com.andyadc.abatis.util;
 
-import com.google.gson.Gson;
+import com.alibaba.fastjson2.JSON;
 
 public final class Utils {
 
     public static String toJson(Object o) {
-        return new Gson().toJson(o);
+        return JSON.toJSONString(o);
     }
 }

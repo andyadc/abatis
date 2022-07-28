@@ -1,6 +1,6 @@
 package com.andyadc.abatis.util;
 
-import com.google.gson.Gson;
+import com.alibaba.fastjson2.JSON;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public final class Utils {
 
     public static String toJson(Object o) {
-        return new Gson().toJson(o);
+        return JSON.toJSONString(o);
     }
 
     public static String capitalize(String str) {

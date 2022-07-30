@@ -3,7 +3,6 @@ package com.andyadc.abatis.executor.resultset;
 import com.andyadc.abatis.executor.Executor;
 import com.andyadc.abatis.mapping.BoundSql;
 import com.andyadc.abatis.mapping.MappedStatement;
-import com.andyadc.abatis.util.Utils;
 
 import java.lang.reflect.Method;
 import java.sql.Date;
@@ -21,20 +20,17 @@ import java.util.List;
 public class DefaultResultSetHandler implements ResultSetHandler {
 
     private final BoundSql boundSql;
+    private final MappedStatement mappedStatement;
 
     public DefaultResultSetHandler(Executor executor, MappedStatement mappedStatement, BoundSql boundSql) {
         this.boundSql = boundSql;
+        this.mappedStatement = mappedStatement;
     }
 
     @Override
     public <E> List<E> handleResultSets(Statement stmt) throws SQLException {
         ResultSet resultSet = stmt.getResultSet();
-        try {
-            return resultSet2Obj(resultSet, Class.forName(boundSql.getResultType()));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return resultSet2Obj(resultSet, mappedStatement.getResultType());
     }
 
     private <T> List<T> resultSet2Obj(ResultSet resultSet, Class<?> clazz) {
@@ -48,10 +44,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
                 for (int i = 1; i <= columnCount; i++) {
                     Object value = resultSet.getObject(i);
                     String columnName = metaData.getColumnName(i);
-
-                    String property = Utils.capitalize(Utils.underline2CamelCase(columnName));
-                    String setMethod = "set" + property;
-
+                    String setMethod = "set" + columnName.substring(0, 1).toUpperCase() + columnName.substring(1);
                     Method method;
                     if (value instanceof Timestamp) {
                         method = clazz.getMethod(setMethod, Date.class);

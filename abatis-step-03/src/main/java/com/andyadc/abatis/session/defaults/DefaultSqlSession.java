@@ -23,7 +23,7 @@ public class DefaultSqlSession implements SqlSession {
         MappedStatement mappedStatement = configuration.getMappedStatement(statement);
         return (T) ("你被代理了！" +
                 "\n方法：" + statement +
-                "\n入参：" + Utils.toJson(parameter) +
+                "\n入参：" + Utils.toJSONString(parameter) +
                 "\n待执行SQL：" + mappedStatement.getSql());
     }
 

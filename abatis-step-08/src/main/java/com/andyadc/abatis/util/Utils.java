@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public final class Utils {
 
-    public static String toJson(Object o) {
+    public static String toJSONString(Object o) {
         return JSON.toJSONString(o);
     }
 

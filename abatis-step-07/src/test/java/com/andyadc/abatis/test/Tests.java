@@ -26,6 +26,6 @@ public class Tests {
 
         // 3. 测试验证
         User user = userMapper.selectById(1000L);
-        System.out.println(Utils.toJson(user));
+        System.out.println(Utils.toJSONString(user));
     }
 }

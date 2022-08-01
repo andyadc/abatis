@@ -24,10 +24,10 @@ public class ReflectionTests {
 
         MetaObject metaObject = SystemMetaObject.forObject(teacher);
 
-        logger.info("getGetterNames：{}", Utils.toJson(metaObject.getGetterNames()));
-        logger.info("getSetterNames：{}", Utils.toJson(metaObject.getSetterNames()));
-        logger.info("name的get方法返回值：{}", Utils.toJson(metaObject.getGetterType("name")));
-        logger.info("students的set方法参数值：{}", Utils.toJson(metaObject.getGetterType("students")));
+        logger.info("getGetterNames：{}", Utils.toJSONString(metaObject.getGetterNames()));
+        logger.info("getSetterNames：{}", Utils.toJSONString(metaObject.getSetterNames()));
+        logger.info("name的get方法返回值：{}", Utils.toJSONString(metaObject.getGetterType("name")));
+        logger.info("students的set方法参数值：{}", Utils.toJSONString(metaObject.getGetterType("students")));
         logger.info("name的hasGetter：{}", metaObject.hasGetter("name"));
         logger.info("student.id（属性为对象）的hasGetter：{}", metaObject.hasGetter("student.id"));
         logger.info("获取name的属性值：{}", metaObject.getValue("name"));
@@ -36,8 +36,8 @@ public class ReflectionTests {
         logger.info("设置name的属性值：{}", metaObject.getValue("name"));
         // 设置属性（集合）的元素值
         metaObject.setValue("students[0].id", "001");
-        logger.info("获取students集合的第一个元素的属性值：{}", Utils.toJson(metaObject.getValue("students[0].id")));
-        logger.info("对象的序列化：{}", Utils.toJson(teacher));
+        logger.info("获取students集合的第一个元素的属性值：{}", Utils.toJSONString(metaObject.getValue("students[0].id")));
+        logger.info("对象的序列化：{}", Utils.toJSONString(teacher));
     }
 
     static class Teacher {

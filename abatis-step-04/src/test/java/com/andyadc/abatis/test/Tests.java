@@ -29,7 +29,7 @@ public class Tests {
 
         User user = userMapper.selectById(1000L);
 
-        System.out.println(Utils.toJson(user));
+        System.out.println(Utils.toJSONString(user));
     }
 
     @Test
@@ -45,6 +45,6 @@ public class Tests {
         // 执行查询：默认是一个集合参数
         Object[] req = {1000L};
         Object res = sqlSession.selectOne("com.andyadc.abatis.test.mapper.UserMapper.selectById", req);
-        System.out.println(Utils.toJson(res));
+        System.out.println(Utils.toJSONString(res));
     }
 }

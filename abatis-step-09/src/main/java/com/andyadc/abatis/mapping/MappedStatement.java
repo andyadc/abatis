@@ -1,5 +1,6 @@
 package com.andyadc.abatis.mapping;
 
+import com.andyadc.abatis.scripting.LanguageDriver;
 import com.andyadc.abatis.session.Configuration;
 
 /**
@@ -12,6 +13,7 @@ public class MappedStatement {
     private String id;
     private SqlCommandType sqlCommandType;
     private SqlSource sqlSource;
+    private LanguageDriver lang;
 
     MappedStatement() {
         // constructor disabled
@@ -37,6 +39,10 @@ public class MappedStatement {
         return resultType;
     }
 
+    public LanguageDriver getLang() {
+        return lang;
+    }
+
     /**
      * 建造者
      */
@@ -50,6 +56,7 @@ public class MappedStatement {
             mappedStatement.sqlCommandType = sqlCommandType;
             mappedStatement.sqlSource = sqlSource;
             mappedStatement.resultType = resultType;
+            mappedStatement.lang = configuration.getDefaultScriptingLanguageInstance();
         }
 
         public MappedStatement build() {

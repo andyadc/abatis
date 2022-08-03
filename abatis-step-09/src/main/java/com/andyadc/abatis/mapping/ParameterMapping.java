@@ -2,6 +2,8 @@ package com.andyadc.abatis.mapping;
 
 import com.andyadc.abatis.session.Configuration;
 import com.andyadc.abatis.type.JdbcType;
+import com.andyadc.abatis.type.TypeHandler;
+import com.andyadc.abatis.type.TypeHandlerRegistry;
 
 /**
  * 参数映射 #{property,javaType=int,jdbcType=NUMERIC}
@@ -16,6 +18,8 @@ public class ParameterMapping {
     private Class<?> javaType = Object.class;
     // jdbcType=NUMERIC
     private JdbcType jdbcType;
+
+    private TypeHandler<?> typeHandler;
 
     private ParameterMapping() {
     }
@@ -34,6 +38,10 @@ public class ParameterMapping {
 
     public JdbcType getJdbcType() {
         return jdbcType;
+    }
+
+    public TypeHandler<?> getTypeHandler() {
+        return typeHandler;
     }
 
     public static class Builder {
@@ -57,6 +65,12 @@ public class ParameterMapping {
         }
 
         public ParameterMapping build() {
+            if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
+                Configuration configuration = parameterMapping.configuration;
+                TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+                parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType, parameterMapping.jdbcType);
+            }
+
             return parameterMapping;
         }
     }

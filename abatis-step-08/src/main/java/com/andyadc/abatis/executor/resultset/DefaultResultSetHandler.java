@@ -3,6 +3,7 @@ package com.andyadc.abatis.executor.resultset;
 import com.andyadc.abatis.executor.Executor;
 import com.andyadc.abatis.mapping.BoundSql;
 import com.andyadc.abatis.mapping.MappedStatement;
+import com.andyadc.abatis.util.Utils;
 
 import java.lang.reflect.Method;
 import java.sql.Date;
@@ -44,7 +45,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
                 for (int i = 1; i <= columnCount; i++) {
                     Object value = resultSet.getObject(i);
                     String columnName = metaData.getColumnName(i);
-                    String setMethod = "set" + columnName.substring(0, 1).toUpperCase() + columnName.substring(1);
+
+                    String property = Utils.capitalize(Utils.underline2CamelCase(columnName));
+                    String setMethod = "set" + property;
+
                     Method method;
                     if (value instanceof Timestamp) {
                         method = clazz.getMethod(setMethod, Date.class);

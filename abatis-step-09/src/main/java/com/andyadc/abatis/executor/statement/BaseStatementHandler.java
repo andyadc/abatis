@@ -1,6 +1,7 @@
 package com.andyadc.abatis.executor.statement;
 
 import com.andyadc.abatis.executor.Executor;
+import com.andyadc.abatis.executor.parameter.ParameterHandler;
 import com.andyadc.abatis.executor.resultset.ResultSetHandler;
 import com.andyadc.abatis.mapping.BoundSql;
 import com.andyadc.abatis.mapping.MappedStatement;
@@ -22,6 +23,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
     protected final Object parameterObject;
     protected final ResultSetHandler resultSetHandler;
+    protected final ParameterHandler parameterHandler;
 
     protected BoundSql boundSql;
 
@@ -33,6 +35,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
         this.parameterObject = parameterObject;
         this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, boundSql);
+        this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
     }
 
     @Override

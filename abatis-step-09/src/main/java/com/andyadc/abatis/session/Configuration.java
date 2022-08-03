@@ -6,6 +6,7 @@ import com.andyadc.abatis.datasource.pooled.PooledDataSourceFactory;
 import com.andyadc.abatis.datasource.unpooled.UnpooledDataSourceFactory;
 import com.andyadc.abatis.executor.Executor;
 import com.andyadc.abatis.executor.SimpleExecutor;
+import com.andyadc.abatis.executor.parameter.ParameterHandler;
 import com.andyadc.abatis.executor.resultset.DefaultResultSetHandler;
 import com.andyadc.abatis.executor.resultset.ResultSetHandler;
 import com.andyadc.abatis.executor.statement.PreparedStatementHandler;
@@ -18,6 +19,7 @@ import com.andyadc.abatis.reflection.factory.DefaultObjectFactory;
 import com.andyadc.abatis.reflection.factory.ObjectFactory;
 import com.andyadc.abatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import com.andyadc.abatis.reflection.wrapper.ObjectWrapperFactory;
+import com.andyadc.abatis.scripting.LanguageDriver;
 import com.andyadc.abatis.scripting.LanguageDriverRegistry;
 import com.andyadc.abatis.scripting.xmltags.XMLLanguageDriver;
 import com.andyadc.abatis.transaction.Transaction;
@@ -143,5 +145,16 @@ public class Configuration {
 
     public LanguageDriverRegistry getLanguageRegistry() {
         return languageRegistry;
+    }
+
+    public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+        // 创建参数处理器
+        ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);
+        // 插件的一些参数，也是在这里处理，暂时不添加这部分内容 interceptorChain.pluginAll(parameterHandler);
+        return parameterHandler;
+    }
+
+    public LanguageDriver getDefaultScriptingLanguageInstance() {
+        return languageRegistry.getDefaultDriver();
     }
 }

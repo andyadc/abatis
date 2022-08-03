@@ -15,7 +15,7 @@ import java.io.Reader;
 public class Tests {
 
     @Test
-    public void test_08_SqlSessionFactory() throws IOException {
+    public void test_09_SqlSessionFactory() throws IOException {
         // 1. 从 SqlSessionFactory中获取 SqlSession
         Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);

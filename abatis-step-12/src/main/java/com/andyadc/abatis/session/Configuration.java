@@ -14,6 +14,7 @@ import com.andyadc.abatis.executor.statement.StatementHandler;
 import com.andyadc.abatis.mapping.BoundSql;
 import com.andyadc.abatis.mapping.Environment;
 import com.andyadc.abatis.mapping.MappedStatement;
+import com.andyadc.abatis.mapping.ResultMap;
 import com.andyadc.abatis.reflection.MetaObject;
 import com.andyadc.abatis.reflection.factory.DefaultObjectFactory;
 import com.andyadc.abatis.reflection.factory.ObjectFactory;
@@ -37,21 +38,28 @@ import java.util.Set;
  */
 public class Configuration {
 
+    // 结果映射，存在Map里
+    protected final Map<String, ResultMap> resultMaps = new HashMap<>();
+    protected final Set<String> loadedResources = new HashSet<>();
+
     // 映射的语句，存在Map里
     protected final Map<String, MappedStatement> mappedStatements = new HashMap<>();
+    //环境
+    protected Environment environment;
+
     // 类型别名注册机
     protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
     protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
+
     // 类型处理器注册机
     protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
-    protected final Set<String> loadedResources = new HashSet<>();
-    //环境
-    protected Environment environment;
-    // 映射注册机
-    protected MapperRegistry mapperRegistry = new MapperRegistry(this);
+
     // 对象工厂和对象包装器工厂
     protected ObjectFactory objectFactory = new DefaultObjectFactory();
     protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
+    // 映射注册机
+    protected MapperRegistry mapperRegistry = new MapperRegistry(this);
+
     protected String databaseId;
 
     public Configuration() {
@@ -160,5 +168,13 @@ public class Configuration {
 
     public ObjectFactory getObjectFactory() {
         return objectFactory;
+    }
+
+    public ResultMap getResultMap(String id) {
+        return resultMaps.get(id);
+    }
+
+    public void addResultMap(ResultMap resultMap) {
+        resultMaps.put(resultMap.getId(), resultMap);
     }
 }

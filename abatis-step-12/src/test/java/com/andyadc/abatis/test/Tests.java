@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
-import java.util.List;
 
 public class Tests {
 
@@ -25,70 +24,10 @@ public class Tests {
     }
 
     @Test
-    public void test_11_UserMapper_selectById() {
+    public void test_12_UserMapper_selectById() {
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 
         User user = userMapper.selectById(1000L);
         System.out.println(Utils.toJSONString(user));
-    }
-
-    @Test
-    public void test_11_UserMapper_selectByUser() {
-        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-
-        User user = new User();
-        user.setName("adc");
-        user.setStatus(1);
-        user = userMapper.selectByUser(user);
-        System.out.println(Utils.toJSONString(user));
-    }
-
-    @Test
-    public void test_11_UserMapper_selectByStatus() {
-        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-
-        User user = new User();
-        user.setStatus(1);
-        List<User> list = userMapper.selectByStatus(user);
-        System.out.println(Utils.toJSONString(list));
-    }
-
-    @Test
-    public void test_11_UserMapper_updateAgeById() {
-        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-
-        User user = new User();
-        user.setAge(123);
-        user.setId(1003L);
-        int result = userMapper.updateAgeById(user);
-        System.out.println(result);
-
-        sqlSession.commit();
-    }
-
-    @Test
-    public void test_11_UserMapper_insertUser() {
-        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-
-        User user = new User();
-        user.setName("adc1");
-        user.setAge(111);
-        user.setStatus(1);
-        user = userMapper.insertUser(user);
-        System.out.println(Utils.toJSONString(user));
-
-        sqlSession.commit();
-    }
-
-    @Test
-    public void test_11_UserMapper_deleteByName() {
-        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-
-        User user = new User();
-        user.setName("1");
-        int result = userMapper.deleteByName(user);
-        System.out.println(result);
-
-        sqlSession.commit();
     }
 }

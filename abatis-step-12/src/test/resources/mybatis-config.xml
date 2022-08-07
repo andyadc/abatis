@@ -15,7 +15,7 @@
     </environments>
 
     <mappers>
-        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper class="com.andyadc.abatis.test.mapper.UserMapper"/>
     </mappers>
 
 </configuration>

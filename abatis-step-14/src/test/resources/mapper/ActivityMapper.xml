@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper namespace="com.andyadc.abatis.test.mapper.ActivityMapper">
+
+    <resultMap id="activityMap" type="com.andyadc.abatis.test.entity.Activity">
+        <id column="id" property="id"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="activity_name" property="activityName"/>
+        <result column="activity_desc" property="activityDesc"/>
+        <result column="status" property="status"/>
+        <result column="version" property="version"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectByActivityId" parameterType="java.lang.Long" resultMap="activityMap">
+        SELECT
+        *
+        FROM t_activity
+        WHERE activity_id = #{activityId}
+    </select>
+
+    <insert id="insert" parameterType="com.andyadc.abatis.test.entity.Activity">
+
+        <selectKey keyProperty="id" order="AFTER" resultType="long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
+        INSERT INTO t_activity
+        ( activity_id, activity_name, activity_desc, `status` )
+        VALUES
+        ( #{activityId}, #{activityName}, #{activityDesc}, #{status} )
+    </insert>
+
+</mapper>

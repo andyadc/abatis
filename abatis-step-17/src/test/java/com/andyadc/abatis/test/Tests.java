@@ -25,12 +25,17 @@ public class Tests {
     }
 
     @Test
-    public void test_16_ActivityMapper_selectByActivity() {
+    public void test_17_ActivityMapper_selectByActivity() {
         ActivityMapper activityMapper = sqlSession.getMapper(ActivityMapper.class);
 
         Activity activity = new Activity();
         activity.setStatus(1);
         List<Activity> list = activityMapper.selectByActivity(activity);
+        System.out.println(Utils.toJSONString(list));
+
+        System.out.println("<<<<<<<<<<???>>>>>>>>>>");
+
+        list = activityMapper.selectByActivity(activity);
         System.out.println(Utils.toJSONString(list));
     }
 }

@@ -70,7 +70,7 @@ public interface SqlSession {
      * @param parameter A parameter object to pass to the statement.
      * @return int The number of rows affected by the delete. 返回的是受影响的行数
      */
-    int delete(String statement, Object parameter);
+    Object delete(String statement, Object parameter);
 
     /**
      * 以下是事务控制方法 commit,rollback
@@ -78,6 +78,16 @@ public interface SqlSession {
      * Note that database connection will not be committed if no updates/deletes/inserts were called.
      */
     void commit();
+
+    /**
+     * 关闭Session
+     */
+    void close();
+
+    /**
+     * 清理 Session 缓存
+     */
+    void clearCache();
 
     /**
      * Retrieves current configuration

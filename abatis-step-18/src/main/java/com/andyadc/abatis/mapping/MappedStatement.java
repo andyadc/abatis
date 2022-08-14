@@ -1,5 +1,6 @@
 package com.andyadc.abatis.mapping;
 
+import com.andyadc.abatis.cache.Cache;
 import com.andyadc.abatis.executor.keygen.Jdbc3KeyGenerator;
 import com.andyadc.abatis.executor.keygen.KeyGenerator;
 import com.andyadc.abatis.executor.keygen.NoKeyGenerator;
@@ -22,12 +23,13 @@ public class MappedStatement {
     private SqlSource sqlSource;
     private LanguageDriver lang;
     private List<ResultMap> resultMaps;
+    private boolean flushCacheRequired;
 
     private KeyGenerator keyGenerator;
     private String[] keyProperties;
     private String[] keyColumns;
-
-    private boolean flushCacheRequired;
+    private Cache cache;
+    private boolean useCache;
 
     MappedStatement() {
         // constructor disabled
@@ -94,6 +96,14 @@ public class MappedStatement {
         return flushCacheRequired;
     }
 
+    public boolean isUseCache() {
+        return useCache;
+    }
+
+    public Cache getCache() {
+        return cache;
+    }
+
     /**
      * 建造者
      */
@@ -142,5 +152,19 @@ public class MappedStatement {
             return this;
         }
 
+        public Builder cache(Cache cache) {
+            mappedStatement.cache = cache;
+            return this;
+        }
+
+        public Builder flushCacheRequired(boolean flushCacheRequired) {
+            mappedStatement.flushCacheRequired = flushCacheRequired;
+            return this;
+        }
+
+        public Builder useCache(boolean useCache) {
+            mappedStatement.useCache = useCache;
+            return this;
+        }
     }
 }

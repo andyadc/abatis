@@ -32,7 +32,6 @@ import java.util.Set;
  * 注解配置构建器 Mapper
  */
 public class MapperAnnotationBuilder {
-
     private final Set<Class<? extends Annotation>> sqlAnnotationTypes = new HashSet<>();
 
     private final Configuration configuration;
@@ -78,6 +77,7 @@ public class MapperAnnotationBuilder {
             final String mappedStatementId = type.getName() + "." + method.getName();
             SqlCommandType sqlCommandType = getSqlCommandType(method);
 
+            // step-14 新增
             KeyGenerator keyGenerator;
             String keyProperty = "id";
             if (SqlCommandType.INSERT.equals(sqlCommandType) || SqlCommandType.UPDATE.equals(sqlCommandType)) {
@@ -101,6 +101,8 @@ public class MapperAnnotationBuilder {
                     parameterTypeClass,
                     resultMapId,
                     getReturnType(method),
+                    false,
+                    false,
                     keyGenerator,
                     keyProperty,
                     languageDriver

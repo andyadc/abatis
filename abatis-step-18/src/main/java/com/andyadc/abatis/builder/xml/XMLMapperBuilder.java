@@ -3,6 +3,7 @@ package com.andyadc.abatis.builder.xml;
 import com.andyadc.abatis.builder.BaseBuilder;
 import com.andyadc.abatis.builder.MapperBuilderAssistant;
 import com.andyadc.abatis.builder.ResultMapResolver;
+import com.andyadc.abatis.cache.Cache;
 import com.andyadc.abatis.io.Resources;
 import com.andyadc.abatis.mapping.ResultFlag;
 import com.andyadc.abatis.mapping.ResultMap;
@@ -17,6 +18,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * XML映射构建器
@@ -67,16 +69,44 @@ public class XMLMapperBuilder extends BaseBuilder {
         }
         builderAssistant.setCurrentNamespace(namespace);
 
-        // 2. 解析resultMap step-13 新增
+        // 2. 配置cache
+        cacheElement(element.element("cache"));
+
+        // 3. 解析resultMap step-13 新增
         resultMapElements(element.elements("resultMap"));
 
-        // 3.配置select|insert|update|delete
-        buildStatementFromContext(
-                element.elements("select"),
+        // 4.配置select|insert|update|delete
+        buildStatementFromContext(element.elements("select"),
                 element.elements("insert"),
                 element.elements("update"),
                 element.elements("delete")
         );
+    }
+
+    /**
+     * <cache eviction="FIFO" flushInterval="600000" size="512" readOnly="true"/>
+     */
+    private void cacheElement(Element context) {
+        if (context == null) return;
+        // 基础配置信息
+        String type = context.attributeValue("type", "PERPETUAL");
+        Class<? extends Cache> typeClass = typeAliasRegistry.resolveAlias(type);
+        // 缓存队列 FIFO
+        String eviction = context.attributeValue("eviction", "FIFO");
+        Class<? extends Cache> evictionClass = typeAliasRegistry.resolveAlias(eviction);
+        Long flushInterval = Long.valueOf(context.attributeValue("flushInterval"));
+        Integer size = Integer.valueOf(context.attributeValue("size"));
+        boolean readWrite = !Boolean.parseBoolean(context.attributeValue("readOnly", "false"));
+        boolean blocking = !Boolean.parseBoolean(context.attributeValue("blocking", "false"));
+
+        // 解析额外属性信息；<property name="cacheFile" value="/tmp/xxx-cache.tmp"/>
+        List<Element> elements = context.elements();
+        Properties props = new Properties();
+        for (Element element : elements) {
+            props.setProperty(element.attributeValue("name"), element.attributeValue("value"));
+        }
+        // 构建缓存
+        builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, blocking, props);
     }
 
     private void resultMapElements(List<Element> list) {
@@ -84,17 +114,6 @@ public class XMLMapperBuilder extends BaseBuilder {
             try {
                 resultMapElement(element, Collections.emptyList());
             } catch (Exception ignore) {
-            }
-        }
-    }
-
-    // 配置select|insert|update|delete
-    @SafeVarargs
-    private final void buildStatementFromContext(List<Element>... lists) {
-        for (List<Element> list : lists) {
-            for (Element element : list) {
-                final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, element);
-                statementParser.parseStatementNode();
             }
         }
     }
@@ -140,5 +159,16 @@ public class XMLMapperBuilder extends BaseBuilder {
         String property = context.attributeValue("property");
         String column = context.attributeValue("column");
         return builderAssistant.buildResultMapping(resultType, property, column, flags);
+    }
+
+    // 配置select|insert|update|delete
+    @SafeVarargs
+    private final void buildStatementFromContext(List<Element>... lists) {
+        for (List<Element> list : lists) {
+            for (Element element : list) {
+                final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, element);
+                statementParser.parseStatementNode();
+            }
+        }
     }
 }

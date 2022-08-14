@@ -47,34 +47,18 @@ public class XMLConfigBuilder extends BaseBuilder {
      */
     public Configuration parse() {
         try {
-            // 环境
-            environmentsElement(root.element("environments"));
+            // 插件 step-16 添加
+            pluginElement(root.element("plugins"));
             // 设置
             settingsElement(root.element("settings"));
-            // 插件
-            pluginElement(root.element("plugins"));
+            // 环境
+            environmentsElement(root.element("environments"));
             // 解析映射器
             mapperElement(root.element("mappers"));
         } catch (Exception e) {
             throw new RuntimeException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
         }
         return configuration;
-    }
-
-    /**
-     * <settings>
-     * <!-- 缓存级别：SESSION/STATEMENT -->
-     * <setting name="localCacheScope" value="SESSION"/>
-     * </settings>
-     */
-    private void settingsElement(Element context) {
-        if (context == null) return;
-        List<Element> elements = context.elements();
-        Properties props = new Properties();
-        for (Element element : elements) {
-            props.setProperty(element.attributeValue("name"), element.attributeValue("value"));
-        }
-        configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty("localCacheScope")));
     }
 
     /**
@@ -102,6 +86,25 @@ public class XMLConfigBuilder extends BaseBuilder {
             interceptorInstance.setProperties(properties);
             configuration.addInterceptor(interceptorInstance);
         }
+    }
+
+    /**
+     * <settings>
+     * <!-- 全局缓存：true/false -->
+     * <setting name="cacheEnabled" value="false"/>
+     * <!--缓存级别：SESSION/STATEMENT-->
+     * <setting name="localCacheScope" value="SESSION"/>
+     * </settings>
+     */
+    private void settingsElement(Element context) {
+        if (context == null) return;
+        List<Element> elements = context.elements();
+        Properties props = new Properties();
+        for (Element element : elements) {
+            props.setProperty(element.attributeValue("name"), element.attributeValue("value"));
+        }
+        configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
+        configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty("localCacheScope")));
     }
 
     /**
@@ -176,6 +179,7 @@ public class XMLConfigBuilder extends BaseBuilder {
                 Class<?> mapperInterface = Resources.classForName(mapperClass);
                 configuration.addMapper(mapperInterface);
             }
+
         }
     }
 }

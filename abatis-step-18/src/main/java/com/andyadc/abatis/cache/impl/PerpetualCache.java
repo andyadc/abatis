@@ -1,12 +1,9 @@
 package com.andyadc.abatis.cache.impl;
 
 import com.andyadc.abatis.cache.Cache;
-import com.andyadc.abatis.util.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 一级缓存，在 Session 生命周期内一直保持，
@@ -14,11 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PerpetualCache implements Cache {
 
-    private final Logger logger = LoggerFactory.getLogger(PerpetualCache.class);
-
-    // 使用HashMap存放一级缓存数据，session 生命周期较短，正常情况下数据不会一直在缓存存放
-    private final Map<Object, Object> cache = new ConcurrentHashMap<>();
     private final String id;
+    // 使用HashMap存放一级缓存数据，session 生命周期较短，正常情况下数据不会一直在缓存存放
+    private final Map<Object, Object> cache = new HashMap<>();
 
     public PerpetualCache(String id) {
         this.id = id;
@@ -36,11 +31,7 @@ public class PerpetualCache implements Cache {
 
     @Override
     public Object getObject(Object key) {
-        Object obj = cache.get(key);
-        if (null != obj) {
-            logger.info("一级缓存 \r\nkey：{} \r\nval：{}", key, Utils.toJSONString(obj));
-        }
-        return obj;
+        return cache.get(key);
     }
 
     @Override

@@ -13,7 +13,12 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <select id="selectByActivity" parameterType="com.andyadc.abatis.test.entity.Activity" resultMap="activityMap">
+    <cache eviction="FIFO" flushInterval="600000" size="512" readOnly="true"/>
+
+    <select id="selectByActivity"
+            parameterType="com.andyadc.abatis.test.entity.Activity"
+            resultMap="activityMap"
+            flushCache="false" useCache="true">
         SELECT
         *
         FROM t_activity

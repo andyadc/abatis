@@ -23,8 +23,6 @@ import java.util.List;
  */
 public abstract class BaseExecutor implements Executor {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BaseExecutor.class);
-
     protected Configuration configuration;
     protected Transaction transaction;
     protected Executor wrapper;
@@ -32,13 +30,13 @@ public abstract class BaseExecutor implements Executor {
     protected PerpetualCache localCache;
     // 查询堆栈
     protected int queryStack = 0;
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(BaseExecutor.class);
     private boolean closed;
 
     protected BaseExecutor(Configuration configuration, Transaction transaction) {
         this.configuration = configuration;
         this.transaction = transaction;
         this.wrapper = this;
-
         this.localCache = new PerpetualCache("LocalCache");
     }
 
@@ -49,6 +47,15 @@ public abstract class BaseExecutor implements Executor {
         }
         clearLocalCache();
         return doUpdate(ms, parameter);
+    }
+
+    @Override
+    public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+        // 1. 获取绑定SQL
+        BoundSql boundSql = ms.getBoundSql(parameter);
+        // 2. 创建缓存Key
+        CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
+        return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
     }
 
     @Override
@@ -66,7 +73,6 @@ public abstract class BaseExecutor implements Executor {
             // 根据cacheKey从localCache中查询数据
             list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
             if (list == null) {
-                logger.info("query from db.");
                 list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
             }
         } finally {
@@ -93,15 +99,6 @@ public abstract class BaseExecutor implements Executor {
         return list;
     }
 
-    @Override
-    public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-        // 1. 获取绑定SQL
-        BoundSql boundSql = ms.getBoundSql(parameter);
-        // 2. 创建缓存Key
-        CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
-        return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
-    }
-
     protected abstract int doUpdate(MappedStatement ms, Object parameter) throws SQLException;
 
     protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException;
@@ -119,6 +116,7 @@ public abstract class BaseExecutor implements Executor {
         if (closed) {
             throw new RuntimeException("Cannot commit, transaction is already closed");
         }
+        clearLocalCache();
         if (required) {
             transaction.commit();
         }
@@ -127,33 +125,12 @@ public abstract class BaseExecutor implements Executor {
     @Override
     public void rollback(boolean required) throws SQLException {
         if (!closed) {
-            if (required) {
-                transaction.rollback();
-            }
-        }
-    }
-
-    @Override
-    public void close(boolean forceRollback) {
-        try {
             try {
-                rollback(forceRollback);
+                clearLocalCache();
             } finally {
-                transaction.close();
-            }
-        } catch (SQLException e) {
-            logger.warn("Unexpected exception on closing transaction.  Cause: " + e);
-        } finally {
-            transaction = null;
-            closed = true;
-        }
-    }
-
-    protected void closeStatement(Statement statement) {
-        if (statement != null) {
-            try {
-                statement.close();
-            } catch (SQLException ignore) {
+                if (required) {
+                    transaction.rollback();
+                }
             }
         }
     }
@@ -196,5 +173,36 @@ public abstract class BaseExecutor implements Executor {
             cacheKey.update(configuration.getEnvironment().getId());
         }
         return cacheKey;
+    }
+
+    @Override
+    public void setExecutorWrapper(Executor executor) {
+        this.wrapper = wrapper;
+    }
+
+    @Override
+    public void close(boolean forceRollback) {
+        try {
+            try {
+                rollback(forceRollback);
+            } finally {
+                transaction.close();
+            }
+        } catch (SQLException e) {
+            logger.warn("Unexpected exception on closing transaction.  Cause: " + e);
+        } finally {
+            transaction = null;
+            localCache = null;
+            closed = true;
+        }
+    }
+
+    protected void closeStatement(Statement statement) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException ignore) {
+            }
+        }
     }
 }

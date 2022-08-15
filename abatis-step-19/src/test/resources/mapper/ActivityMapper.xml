@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper namespace="com.andyadc.abatis.test.mapper.ActivityMapper">
+
+    <resultMap id="activityMap" type="com.andyadc.abatis.test.entity.Activity">
+        <id column="id" property="id"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="activity_name" property="activityName"/>
+        <result column="activity_desc" property="activityDesc"/>
+        <result column="status" property="status"/>
+        <result column="version" property="version"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <cache eviction="FIFO" flushInterval="600000" size="512" readOnly="true"/>
+
+    <select id="selectByActivity"
+            parameterType="com.andyadc.abatis.test.entity.Activity"
+            resultMap="activityMap"
+            flushCache="false" useCache="true">
+        SELECT
+        *
+        FROM t_activity
+        <trim prefix="where" prefixOverrides="AND | OR" suffixOverrides="and">
+            <if test="null != status">
+                status = #{status}
+            </if>
+        </trim>
+    </select>
+
+</mapper>

@@ -16,7 +16,7 @@
 
         <slf4j.version>1.7.36</slf4j.version>
         <logback.version>1.2.12</logback.version>
-        <fastjson.version>2.0.33</fastjson.version>
+        <fastjson.version>2.0.35</fastjson.version>
         <dom4j.version>2.1.4</dom4j.version>
         <druid.version>1.2.18</druid.version>
         <mysql.version>8.0.33</mysql.version>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.19</version>
+            <version>5.8.20</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
